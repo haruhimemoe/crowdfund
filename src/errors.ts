@@ -14,7 +14,8 @@ export type CrowdfundErrorCode =
   | "already-refunded"
   | "overflow"
   | "bad-convert"
-  | "bad-kofi-body";
+  | "bad-kofi-body"
+  | "bad-webhook-body";
 
 /** Thrown for input the package can't work with. `code` says which kind. */
 export class CrowdfundError extends Error {

@@ -1,8 +1,8 @@
 # @haruhimemoe/crowdfund
 
-> Crowdfunding state as data. zod schemas for funding goals, stretch tiers, donations and refunds; integer minor-unit money in any currency; totals, goal progress, unlocked and next tiers, top donors that keep anonymous donors anonymous, dedupe by (source, externalId); Ko-fi webhook parsing, constant-time token check and payload mapping. Never moves money. No runtime dependencies besides the zod peer. ESM for Node 22.12+, Bun, Deno, browsers and edge runtimes.
+> Crowdfunding state as data. zod schemas for funding goals, stretch tiers, donations and refunds; integer minor-unit money in any currency; totals, goal progress, unlocked and next tiers, top donors that keep anonymous donors anonymous, dedupe by (source, externalId); webhook helpers for Ko-fi, Stripe, PayPal, GitHub Sponsors and Buy Me a Coffee. Never moves money. No runtime dependencies besides the zod peer. ESM for Node 22.12+, Bun, Deno, browsers and edge runtimes.
 
-Main exports: `donationSchema`, `fundingGoalSchema`, `goalTierSchema`, `toMinorUnits`, `totalsByCurrency`, `totalsFor`, `goalProgress`, `unlockedTiers`, `nextTier`, `topDonors`, `publicDonation`, `dedupeDonations`, `CrowdfundError`. Subpath: `@haruhimemoe/crowdfund/kofi` (`parseKofiBody`, `verifyKofiToken`, `kofiToDonation`).
+Main exports: `donationSchema`, `fundingGoalSchema`, `goalTierSchema`, `toMinorUnits`, `totalsByCurrency`, `totalsFor`, `goalProgress`, `unlockedTiers`, `nextTier`, `topDonors`, `publicDonation`, `dedupeDonations`, `CrowdfundError`. Subpaths: `@haruhimemoe/crowdfund/kofi`, `/stripe`, `/paypal`, `/github-sponsors`, `/buymeacoffee`: webhook verification and event to donation and refund mapping, no provider SDKs.
 
 ## Docs
 

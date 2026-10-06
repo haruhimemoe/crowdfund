@@ -7,6 +7,7 @@
 - **No runtime dependencies.** `zod` is the only peer. No network, no DOM, no Node-only APIs in `src/`. `tests/api.test.ts` checks imports, `process` and `Buffer`.
 - **Money is integers.** Minor units, safe integers, no float math on amounts. Sums go through `addMinor`. A net is never negative and never above its gross. Keep the property test in `tests/totals.test.ts` passing.
 - **Anonymous stays anonymous.** Nothing that builds public output (`topDonors`, `publicDonation`) may carry an anonymous donor's name, id or message, or any `externalId`.
+- **No provider SDKs.** Webhook subpaths read the provider's JSON with their own zod schema and verify with `src/signing.ts`.
 - **Schemas stay extendable.** No `.refine` or `.superRefine` on exported object schemas. Cross-field rules live in functions and throw `CrowdfundError`.
 - **Public API is pinned** by `tests/api.test.ts`, per subpath. Adding or removing an export is a semver decision: say so in `CHANGELOG.md`. Keep the README's API section in step with `src/`.
 - **Test first.** A behavior change starts as a failing case in the matching test file.
@@ -28,6 +29,8 @@
 | `src/goals.ts` | `goalProgress`, `unlockedTiers`, `nextTier`. |
 | `src/donors.ts` | `topDonors`, `publicDonation`. |
 | `src/dedupe.ts` | `donationKey`, `dedupeDonations`, `hasDonation`. |
+| `src/signing.ts` | Internal: `safeEqual`, `hmacSha256Hex` (Web Crypto), `unixToIso`, `parseWebhookJson`. |
+| `src/stripe/`, `src/paypal/`, `src/github-sponsors/`, `src/buymeacoffee/` | One subpath per provider: signature check (or PayPal's verify body), event schema, donation and refund mapping. No provider SDKs. |
 | `src/kofi/` | `./kofi`: `index.ts` (schema, parsing, mapping, transaction ids), `token.ts` (`verifyKofiToken`). |
 | `tests/` | Vitest, one file per `src/` module plus `api`; `fixtures/` has builders and a Ko-fi payload with a fake token. |
 | `scripts/smoke.mjs` | Imports the built package through its exports map (`bun run test:dist`). |

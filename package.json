@@ -1,7 +1,7 @@
 {
   "name": "@haruhimemoe/crowdfund",
   "version": "0.1.0",
-  "description": "Crowdfunding state as data: zod schemas for goals, tiers, donations and refunds, integer minor-unit money math in any currency, goal progress, stretch tiers, top donors that respect anonymity, dedupe, and Ko-fi webhook helpers. Never moves money. No dependencies besides zod.",
+  "description": "Crowdfunding state as data: zod schemas for goals, tiers, donations and refunds, integer minor-unit money math in any currency, goal progress, stretch tiers, top donors that respect anonymity, dedupe, and webhook helpers for Ko-fi, Stripe, PayPal, GitHub Sponsors and Buy Me a Coffee. Never moves money. No dependencies besides zod.",
   "keywords": [
     "crowdfund",
     "crowdfunding",
@@ -10,7 +10,11 @@
     "stretch goals",
     "ko-fi",
     "webhook",
-    "zod"
+    "zod",
+    "stripe",
+    "paypal",
+    "github sponsors",
+    "buy me a coffee"
   ],
   "homepage": "https://github.com/haruhimemoe/crowdfund#readme",
   "bugs": "https://github.com/haruhimemoe/crowdfund/issues",
@@ -29,6 +33,22 @@
     "./kofi": {
       "types": "./dist/kofi/index.d.ts",
       "default": "./dist/kofi/index.js"
+    },
+    "./stripe": {
+      "types": "./dist/stripe/index.d.ts",
+      "default": "./dist/stripe/index.js"
+    },
+    "./paypal": {
+      "types": "./dist/paypal/index.d.ts",
+      "default": "./dist/paypal/index.js"
+    },
+    "./github-sponsors": {
+      "types": "./dist/github-sponsors/index.d.ts",
+      "default": "./dist/github-sponsors/index.js"
+    },
+    "./buymeacoffee": {
+      "types": "./dist/buymeacoffee/index.d.ts",
+      "default": "./dist/buymeacoffee/index.js"
     },
     "./package.json": "./package.json"
   },

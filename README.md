@@ -1,6 +1,6 @@
 # @haruhimemoe/crowdfund
 
-Crowdfunding state as data: zod schemas for goals, stretch tiers, donations and refunds, and pure functions for totals, goal progress, tiers and donor leaderboards. Money is integer minor units in any currency. A `/kofi` subpath turns Ko-fi webhooks into donations. No runtime dependencies besides zod. ESM for Node 22.12+, Bun, Deno, browsers and edge runtimes.
+Crowdfunding state as data: zod schemas for goals, stretch tiers, donations and refunds, and pure functions for totals, goal progress, tiers and donor leaderboards. Money is integer minor units in any currency. Subpaths turn Ko-fi, Stripe, PayPal, GitHub Sponsors and Buy Me a Coffee webhooks into donations and refunds, with no provider SDK. No runtime dependencies besides zod. ESM for Node 22.12+, Bun, Deno, browsers and edge runtimes.
 
 It never moves money. Your payment provider takes the payment; this package records what it reports and adds it up. Storage, routes and UI stay in your app.
 
@@ -102,7 +102,7 @@ Each has a matching type: `FundingGoal`, `GoalTier`, `Donation`, `Refund`, `Sett
 | `dedupeDonations(donations)` | Keeps the first donation of each key and every one without a key, in order. |
 | `hasDonation(donations, candidate)` | Whether the candidate's key is already there. For a large store, put a unique index on `(source, externalId)` instead. |
 
-`CrowdfundError` has a `code`: `"bad-amount" | "bad-currency" | "refund-exceeds-amount" | "already-refunded" | "overflow" | "bad-convert" | "bad-kofi-body"`.
+`CrowdfundError` has a `code`: `"bad-amount" | "bad-currency" | "refund-exceeds-amount" | "already-refunded" | "overflow" | "bad-convert" | "bad-kofi-body" | "bad-webhook-body"`.
 
 ### `@haruhimemoe/crowdfund/kofi`
 
@@ -118,6 +118,49 @@ Ko-fi posts `application/x-www-form-urlencoded` with one `data` field holding JS
 | `KOFI_TYPES` | `["Donation", "Subscription", "Commission", "Shop Order"]`. |
 
 A parsed payload still holds the verification token and the donor's email. Don't log or store it raw. `kofiToDonation` copies neither. Pass your own `id`: the Ko-fi transaction id can prove who paid, so keep it out of public pages (`publicDonation` drops it).
+
+### Other providers
+
+Each provider has its own subpath, so you load only the one you use. All of them verify with Web Crypto, need no provider SDK and make no HTTP calls. Each gives you the provider's id as `externalId`, so `dedupeDonations` and `hasDonation` catch redelivered events. Refund helpers return `{ externalId, refund }`: find the donation with that `externalId`, then call `refundDonation(donation, refund, { replace: true })`, because Stripe and PayPal report the total refunded so far. None of them copies the payer's email into the donation.
+
+Every `parse*` function throws `CrowdfundError` `bad-webhook-body` for a body that isn't JSON or doesn't match. Verify the signature before you parse.
+
+#### `@haruhimemoe/crowdfund/stripe`
+
+| Export | Does |
+| --- | --- |
+| `verifyStripeSignature(rawBody, header, secret, { toleranceSeconds?, now? })` | `Promise<boolean>`. Checks the `Stripe-Signature` header (`t=...,v1=...`) against HMAC-SHA256 of `t.rawBody`, and refuses timestamps more than `toleranceSeconds` (default 300) from now. Pass the raw body, not re-serialized JSON. |
+| `parseStripeEvent(rawBody)`, `stripeEventSchema` | The event fields this subpath reads. |
+| `stripeToDonation(event, { id, source?, donorName?, anonymous?, message?, recurring? })` | A donation for a paid `checkout.session.completed` or a `payment_intent.succeeded`, else null. `externalId` is the PaymentIntent id, so both events for one payment dedupe to one donation. Stripe has no public or private flag, so pass `anonymous` from your checkout. Throws `bad-amount` without an amount. |
+| `stripeRefund(event, { reason? })` | For `charge.refunded`: `{ externalId, refund }`, with the cumulative `amount_refunded`. |
+
+#### `@haruhimemoe/crowdfund/paypal`
+
+PayPal signs with a certificate, so this subpath doesn't check the signature itself. Send `paypalVerifyBody(...)` as JSON to `POST https://api-m.paypal.com/v1/notifications/verify-webhook-signature` with your access token, and trust the event only when the answer is `{ "verification_status": "SUCCESS" }`.
+
+| Export | Does |
+| --- | --- |
+| `paypalVerifyBody(headers, rawBody, webhookId)` | The verify request body built from the `paypal-*` headers (a `Headers` object works), or null when one is missing. |
+| `parsePaypalEvent(rawBody)`, `paypalEventSchema` | The event fields this subpath reads. |
+| `paypalToDonation(event, { id, source?, donorName?, anonymous?, message?, recurring? })` | A donation for `PAYMENT.CAPTURE.COMPLETED`, else null. `externalId` is the capture id. When PayPal converted the payment, `settled` holds what you received. A capture carries no payer name, so pass `donorName` from the order. |
+| `paypalRefund(event, { reason? })` | For `PAYMENT.CAPTURE.REFUNDED`: `{ externalId, refund }`, using the cumulative `total_refunded_amount` when present. |
+
+#### `@haruhimemoe/crowdfund/github-sponsors`
+
+| Export | Does |
+| --- | --- |
+| `verifyGithubSignature(rawBody, header, secret)` | `Promise<boolean>` for the `X-Hub-Signature-256` header. |
+| `parseGithubSponsorshipEvent(rawBody)`, `githubSponsorshipEventSchema` | The `sponsorship` event fields this subpath reads. |
+| `githubSponsorshipToDonation(event, { id, source? })` | A USD donation for `action: "created"`, else null. `donorId` is `github:<user id>`, and `anonymous` follows the sponsor's privacy level. GitHub sends no event for each monthly payment, so a monthly sponsorship records its first month only, with `recurring: true`. |
+
+#### `@haruhimemoe/crowdfund/buymeacoffee`
+
+| Export | Does |
+| --- | --- |
+| `verifyBuyMeACoffeeSignature(rawBody, header, secret)` | `Promise<boolean>` for the `x-signature-sha256` header. |
+| `parseBuyMeACoffeeEvent(rawBody)`, `buyMeACoffeeEventSchema` | The event fields this subpath reads. |
+| `buyMeACoffeeToDonation(event, { id, source?, anonymous?, allowTest? })` | A donation for a live `donation.created`, else null (test events need `allowTest: true`). Amounts arrive in major units and are read as decimal text, never as float math. A hidden note makes `message` null. |
+| `buyMeACoffeeRefund(event, { reason? })` | For `donation.refunded`: `{ externalId, refund }` for the full amount. |
 
 ## License
 

@@ -9,8 +9,12 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import * as buymeacoffee from "../src/buymeacoffee/index.js";
+import * as githubSponsors from "../src/github-sponsors/index.js";
 import * as root from "../src/index.js";
 import * as kofi from "../src/kofi/index.js";
+import * as paypal from "../src/paypal/index.js";
+import * as stripe from "../src/stripe/index.js";
 
 const ROOT = [
   "CrowdfundError",
@@ -47,17 +51,57 @@ const KOFI = [
   "verifyKofiToken",
 ];
 
+const STRIPE = [
+  "parseStripeEvent",
+  "stripeEventSchema",
+  "stripeRefund",
+  "stripeToDonation",
+  "verifyStripeSignature",
+];
+const PAYPAL = [
+  "parsePaypalEvent",
+  "paypalEventSchema",
+  "paypalRefund",
+  "paypalToDonation",
+  "paypalVerifyBody",
+];
+const GITHUB = [
+  "githubSponsorshipEventSchema",
+  "githubSponsorshipToDonation",
+  "parseGithubSponsorshipEvent",
+  "verifyGithubSignature",
+];
+const BMC = [
+  "buyMeACoffeeEventSchema",
+  "buyMeACoffeeRefund",
+  "buyMeACoffeeToDonation",
+  "parseBuyMeACoffeeEvent",
+  "verifyBuyMeACoffeeSignature",
+];
+
 describe("exports", () => {
   it.each([
     [".", root, ROOT],
     ["./kofi", kofi, KOFI],
+    ["./stripe", stripe, STRIPE],
+    ["./paypal", paypal, PAYPAL],
+    ["./github-sponsors", githubSponsors, GITHUB],
+    ["./buymeacoffee", buymeacoffee, BMC],
   ])("%s exports exactly its API", (_path, mod, names) => {
     expect(Object.keys(mod).sort()).toEqual([...names].sort());
   });
 
   it("maps every subpath in package.json and has no runtime dependencies", () => {
     const pkg = JSON.parse(readFileSync("package.json", "utf8"));
-    expect(Object.keys(pkg.exports)).toEqual([".", "./kofi", "./package.json"]);
+    expect(Object.keys(pkg.exports)).toEqual([
+      ".",
+      "./kofi",
+      "./stripe",
+      "./paypal",
+      "./github-sponsors",
+      "./buymeacoffee",
+      "./package.json",
+    ]);
     expect(pkg.dependencies).toBeUndefined();
     expect(Object.keys(pkg.peerDependencies)).toEqual(["zod"]);
   });

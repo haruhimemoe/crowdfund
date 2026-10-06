@@ -17,6 +17,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `topDonors`, `publicDonation`: donor leaderboards and public rows that never reveal an anonymous donor.
 - `donationKey`, `dedupeDonations`, `hasDonation`: dedupe by `(source, externalId)`.
 - `@haruhimemoe/crowdfund/kofi`: `kofiPayloadSchema`, `parseKofiBody`, `verifyKofiToken`, `kofiToDonation`, `extractKofiTransactionId`, `KOFI_TYPES`.
+- `@haruhimemoe/crowdfund/stripe`: `verifyStripeSignature`, `parseStripeEvent`, `stripeEventSchema`, `stripeToDonation`, `stripeRefund`.
+- `@haruhimemoe/crowdfund/paypal`: `paypalVerifyBody`, `parsePaypalEvent`, `paypalEventSchema`, `paypalToDonation`, `paypalRefund`.
+- `@haruhimemoe/crowdfund/github-sponsors`: `verifyGithubSignature`, `parseGithubSponsorshipEvent`, `githubSponsorshipEventSchema`, `githubSponsorshipToDonation`.
+- `@haruhimemoe/crowdfund/buymeacoffee`: `verifyBuyMeACoffeeSignature`, `parseBuyMeACoffeeEvent`, `buyMeACoffeeEventSchema`, `buyMeACoffeeToDonation`, `buyMeACoffeeRefund`.
 - `CrowdfundError` with a `code`.
 
 [Unreleased]: https://github.com/haruhimemoe/crowdfund/compare/v0.1.0...HEAD

@@ -41,7 +41,22 @@ const donation = kofiToDonation(payload, { id: "d1" });
 assert.equal(totalsByCurrency([donation])[0].net, 500);
 const goal = { id: "g", label: "g", description: null, amount: 1000, currency: "USD" };
 assert.equal(goalProgress(goal, [donation]).percent, 50);
-for (const sub of ["index", "kofi/index"]) {
+const { verifyStripeSignature } = await import("@haruhimemoe/crowdfund/stripe");
+const { paypalVerifyBody } = await import("@haruhimemoe/crowdfund/paypal");
+const { verifyGithubSignature } = await import("@haruhimemoe/crowdfund/github-sponsors");
+const { verifyBuyMeACoffeeSignature } = await import("@haruhimemoe/crowdfund/buymeacoffee");
+assert.equal(await verifyStripeSignature("{}", null, "s"), false);
+assert.equal(paypalVerifyBody(new Headers(), "{}", "w"), null);
+assert.equal(await verifyGithubSignature("{}", "sha256=00", "s"), false);
+assert.equal(await verifyBuyMeACoffeeSignature("{}", "00", "s"), false);
+for (const sub of [
+  "index",
+  "kofi/index",
+  "stripe/index",
+  "paypal/index",
+  "github-sponsors/index",
+  "buymeacoffee/index",
+]) {
   assert.ok(
     existsSync(new URL(`../dist/${sub}.d.ts`, import.meta.url)),
     `dist/${sub}.d.ts missing`,
