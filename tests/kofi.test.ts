@@ -51,6 +51,7 @@ describe("parseKofiBody", () => {
     ["", /no `data`/],
     ["data=", /no `data`/],
     ["data=%7Bnope", /isn't JSON/],
+    [kofiBody({ ...kofiPayload, verification_token: "x".repeat(257) }), /verification_token/],
     [kofiBody({ ...kofiPayload, amount: "ten" }), /amount/],
     [kofiBody({ ...kofiPayload, currency: "usd" }), /currency/],
   ])("refuses %s", (body, message) => {
@@ -70,6 +71,7 @@ describe("verifyKofiToken", () => {
     ["anything", "", false],
     ["tökén", "tökén", true],
     ["tökén", "tokén", false],
+    ["\uD800", "\uDFFF", false],
   ])("%s vs %s is %s", (provided, expected, result) => {
     expect(verifyKofiToken(provided, expected)).toBe(result);
   });
@@ -110,6 +112,13 @@ describe("kofiToDonation", () => {
       },
     );
     expect(donation).toMatchObject({ anonymous: true, recurring: true, source: "kofi-main" });
+  });
+
+  it("fills an empty name, cuts a long one, and takes empty email and null url", () => {
+    const loose = parseKofiBody(kofiBody({ ...kofiPayload, from_name: " ", email: "", url: null }));
+    expect(kofiToDonation(loose, { id: "d" })?.donorName).toBe("Ko-fi Supporter");
+    const long = { ...payload, from_name: "x".repeat(200) };
+    expect(kofiToDonation(long, { id: "d" })?.donorName).toHaveLength(128);
   });
 
   it("returns null for types not accepted", () => {

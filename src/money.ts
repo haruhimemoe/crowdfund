@@ -1,6 +1,7 @@
 /**
  * @file src/money.ts
- * @desc Integer money: currency exponents, decimal text to minor units, checked sums, and\n *       refunds.
+ * @desc Integer money: currency exponents, decimal text to minor units, checked sums, and
+ *       refunds.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026
@@ -83,10 +84,17 @@ export const isRefunded = (donation: Donation): boolean => donation.refund !== n
  * @function netAmount
  * @param donation {Donation} a donation
  * @returns {number} what's left after its refund, in minor units (never negative)
- * @throws {CrowdfundError} `refund-exceeds-amount` when the refund is bigger than the donation
+ * @throws {CrowdfundError} `refund-exceeds-amount` when the refund is bigger than the donation,
+ *         `bad-amount` when the amount or refund isn't a safe integer (amount 1 or more)
  */
 export const netAmount = (donation: Donation): number => {
   const refunded = donation.refund?.amount ?? 0;
+  if (!Number.isSafeInteger(donation.amount) || donation.amount < 1) {
+    throw new CrowdfundError("bad-amount", `donation ${donation.id} has amount ${donation.amount}`);
+  }
+  if (!Number.isSafeInteger(refunded) || refunded < 0) {
+    throw new CrowdfundError("bad-amount", `donation ${donation.id} refunds ${refunded}`);
+  }
   if (refunded > donation.amount) {
     throw new CrowdfundError(
       "refund-exceeds-amount",

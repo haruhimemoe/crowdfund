@@ -1,6 +1,7 @@
 /**
  * @file src/schemas.ts
- * @desc zod schemas for goals, tiers, donations and refunds. Plain objects with no refinements, so\n *       hosts can .extend() them with their own fields.
+ * @desc zod schemas for goals, tiers, donations and refunds. Plain objects with no refinements, so
+ *       hosts can .extend() them with their own fields.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026

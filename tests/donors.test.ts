@@ -90,6 +90,8 @@ describe("topDonors", () => {
     expect(topDonors(twins, { currency: "USD" }).map((r) => r.donorId)).toEqual(["2", "3", "1"]);
     expect(topDonors(list, { currency: "USD", limit: 1 })).toHaveLength(1);
     expect(topDonors(list, { currency: "USD", limit: -1 })).toEqual([]);
+    expect(topDonors(list, { currency: "USD", limit: 2.5 })).toHaveLength(2);
+    expect(topDonors(list, { currency: "USD", limit: Number.NaN })).toEqual([]);
   });
 
   it("keeps the name from the latest donation, by time not list order", () => {

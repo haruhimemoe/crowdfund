@@ -47,6 +47,10 @@ describe("goalProgress", () => {
     expect(goalProgress(huge, [donation(Number.MAX_SAFE_INTEGER)]).percent).toBe(100);
   });
 
+  it.each([0, 1.5, -1])("refuses a goal of %s", (amount) => {
+    expect(() => goalProgress({ ...goal, amount }, [])).toThrow(/goal g1/);
+  });
+
   it("converts other currencies when asked", () => {
     const cad = [donation(1000, { currency: "CAD" })];
     expect(goalProgress(goal, cad).raised).toBe(0);

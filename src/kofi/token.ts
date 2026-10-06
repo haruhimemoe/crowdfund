@@ -1,12 +1,11 @@
 /**
  * @file src/kofi/token.ts
- * @desc Constant-time comparison of a Ko-fi verification token, with no Node-only APIs.
+ * @desc Constant-time comparison of a Ko-fi verification token, with no Node-only APIs. Compares UTF-16 code units, so
+ *       lone surrogates never collapse into one character.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026
  */
-
-const encoder = new TextEncoder();
 
 /**
  * @function verifyKofiToken
@@ -17,10 +16,10 @@ const encoder = new TextEncoder();
  *          lets a request through.
  */
 export const verifyKofiToken = (provided: string, expected: string): boolean => {
-  const a = encoder.encode(provided);
-  const b = encoder.encode(expected);
-  const length = Math.max(a.length, b.length);
-  let diff = a.length ^ b.length;
-  for (let i = 0; i < length; i++) diff |= (a[i] ?? 0) ^ (b[i] ?? 0);
-  return diff === 0 && b.length > 0;
+  const length = Math.max(provided.length, expected.length);
+  let diff = provided.length ^ expected.length;
+  for (let i = 0; i < length; i++) {
+    diff |= (provided.charCodeAt(i) || 0) ^ (expected.charCodeAt(i) || 0);
+  }
+  return diff === 0 && expected.length > 0;
 };

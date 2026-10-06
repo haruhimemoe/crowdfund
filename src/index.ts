@@ -1,6 +1,7 @@
 /**
  * @file src/index.ts
- * @desc @haruhimemoe/crowdfund: schemas, money math, totals, goals and tiers, donors and dedupe.\n *       Ko-fi helpers live in ./kofi.
+ * @desc @haruhimemoe/crowdfund: schemas, money math, totals, goals and tiers, donors and dedupe.
+ *       Ko-fi helpers live in ./kofi.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026

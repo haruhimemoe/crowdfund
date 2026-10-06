@@ -6,6 +6,7 @@
  * @modified Tue Oct 6, 2026
  */
 
+import { CrowdfundError } from "./errors.js";
 import type { Donation, FundingGoal, GoalTier } from "./schemas.js";
 import { type ConvertOptions, totalsFor } from "./totals.js";
 
@@ -38,13 +39,16 @@ const byThreshold = (a: GoalTier, b: GoalTier): number =>
  * @param donations {readonly Donation[]} donations in any currencies
  * @param options {ConvertOptions} `convert` for donations in other currencies
  * @returns {GoalProgress} progress in the goal's currency
- * @throws {CrowdfundError} `refund-exceeds-amount`, `overflow` or `bad-convert`
+ * @throws {CrowdfundError} `bad-amount`, `refund-exceeds-amount`, `overflow` or `bad-convert`
  */
 export const goalProgress = (
   goal: FundingGoal,
   donations: readonly Donation[],
   options: ConvertOptions = {},
 ): GoalProgress => {
+  if (!Number.isSafeInteger(goal.amount) || goal.amount < 1) {
+    throw new CrowdfundError("bad-amount", `goal ${goal.id} has amount ${goal.amount}`);
+  }
   const raised = totalsFor(donations, goal.currency, options).net;
   return {
     currency: goal.currency,

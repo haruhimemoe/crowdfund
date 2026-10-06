@@ -1,6 +1,7 @@
 /**
  * @file src/kofi/index.ts
- * @desc @haruhimemoe/crowdfund/kofi: Ko-fi webhook payload schema, body parsing, token check and\n *       payload to donation mapping. No HTTP: the host's route calls these.
+ * @desc @haruhimemoe/crowdfund/kofi: Ko-fi webhook payload schema, body parsing, token check and
+ *       payload to donation mapping. No HTTP: the host's route calls these.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026
@@ -21,16 +22,16 @@ export const KOFI_TYPES = Object.freeze(["Donation", "Subscription", "Commission
  * verification token and the donor's email: don't log or store it raw.
  */
 export const kofiPayloadSchema = z.object({
-  verification_token: z.string().min(1),
+  verification_token: z.string().min(1).max(256),
   message_id: z.string().min(1),
   timestamp: z.iso.datetime({ offset: true }),
   type: z.string().min(1),
   is_public: z.boolean(),
-  from_name: z.string().min(1).max(128),
+  from_name: z.string(),
   message: z.string().max(2000).nullish(),
   amount: z.string().regex(/^\d+(\.\d+)?$/),
-  url: z.url(),
-  email: z.email().optional(),
+  url: z.string().nullish(),
+  email: z.string().nullish(),
   currency: z.string().regex(/^[A-Z]{3}$/),
   kofi_transaction_id: z.string().min(1).max(128),
   is_subscription_payment: z.boolean(),
@@ -78,8 +79,8 @@ export interface KofiToDonationOptions {
  * @param payload {KofiPayload} a parsed, verified payload
  * @param options {KofiToDonationOptions} the id, plus `source` and `accept`
  * @returns {Donation | null} the donation, or null for a type not in `accept`. The email is not
- *          copied.
- * @throws {CrowdfundError} `bad-amount` for a zero or malformed amount, `bad-currency`
+ *          copied. An empty `from_name` becomes "Ko-fi Supporter"; a long one is cut to 128.
+ * @throws {CrowdfundError} `bad-amount` for a zero amount or one finer than the currency's minor unit, `bad-currency`
  */
 export const kofiToDonation = (
   payload: KofiPayload,
@@ -92,7 +93,7 @@ export const kofiToDonation = (
     id: options.id,
     amount,
     currency: payload.currency,
-    donorName: payload.from_name,
+    donorName: payload.from_name.trim().slice(0, 128) || "Ko-fi Supporter",
     donorId: null,
     anonymous: !payload.is_public,
     message: payload.message ?? null,

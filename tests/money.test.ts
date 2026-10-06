@@ -105,6 +105,16 @@ describe("refunds", () => {
     );
   });
 
+  it.each([
+    [0, null],
+    [1.5, null],
+    [500, -1],
+    [500, 1.5],
+  ])("refuses amount %s with refund %s", (amount, refunded) => {
+    const d = donation(amount, { refund: refunded === null ? null : refund(refunded) });
+    expect(code(() => netAmount(d))).toBe("bad-amount");
+  });
+
   it("refundDonation copies, and refuses a second refund unless replacing", () => {
     const original = donation(500);
     const refunded = refundDonation(original, refund(100));

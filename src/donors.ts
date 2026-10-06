@@ -95,7 +95,7 @@ export const topDonors = (
         (a.rank.donorName < b.rank.donorName ? -1 : a.rank.donorName > b.rank.donorName ? 1 : 0),
     )
     .map((group) => group.rank);
-  return limit === undefined ? ranked : ranked.slice(0, Math.max(0, limit));
+  return limit === undefined ? ranked : ranked.slice(0, Math.max(0, Math.floor(limit) || 0));
 };
 
 /** What a public donor wall may show of a donation. */
@@ -120,7 +120,7 @@ export interface PublicDonation {
  * @param donation {Donation} a stored donation
  * @param options {{ anonymousName?: string }} name shown for anonymous donations, default
  *        "Anonymous"
- * @returns {PublicDonation} the fields safe to show anyone. Never carries `externalId` (a
+ * @returns {PublicDonation} the fields a public page may show. Never carries `externalId` (a
  *          provider transaction id can prove ownership in claim flows), `source`, `settled` or
  *          refund details. Anonymous donations lose their name, `donorId` and message.
  * @throws {CrowdfundError} `refund-exceeds-amount`

@@ -1,6 +1,7 @@
 /**
  * @file src/totals.ts
- * @desc Gross, refunded and net totals per currency, and in one currency through a host-supplied\n *       converter.
+ * @desc Gross, refunded and net totals per currency, and in one currency through a host-supplied
+ *       converter.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026
