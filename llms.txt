@@ -1,0 +1,11 @@
+# @haruhimemoe/crowdfund
+
+> Crowdfunding state as data. zod schemas for funding goals, stretch tiers, donations and refunds; integer minor-unit money in any currency; totals, goal progress, unlocked and next tiers, top donors that keep anonymous donors anonymous, dedupe by (source, externalId); Ko-fi webhook parsing, constant-time token check and payload mapping. Never moves money. No runtime dependencies besides the zod peer. ESM for Node 22.12+, Bun, Deno, browsers and edge runtimes.
+
+Main exports: `donationSchema`, `fundingGoalSchema`, `goalTierSchema`, `toMinorUnits`, `totalsByCurrency`, `totalsFor`, `goalProgress`, `unlockedTiers`, `nextTier`, `topDonors`, `publicDonation`, `dedupeDonations`, `CrowdfundError`. Subpath: `@haruhimemoe/crowdfund/kofi` (`parseKofiBody`, `verifyKofiToken`, `kofiToDonation`).
+
+## Docs
+
+- [Install](https://github.com/haruhimemoe/crowdfund#install)
+- [Quick start](https://github.com/haruhimemoe/crowdfund#quick-start)
+- [API](https://github.com/haruhimemoe/crowdfund#api): every export and the money rules
