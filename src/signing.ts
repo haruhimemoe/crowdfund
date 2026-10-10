@@ -1,6 +1,7 @@
 /**
  * @file src/signing.ts
- * @desc Shared webhook helpers: constant-time string compare, HMAC-SHA256 through Web Crypto,\n *       and unix seconds to ISO, JSON body parsing. Internal, not exported.
+ * @desc Shared webhook helpers: constant-time string compare, HMAC-SHA256 through Web Crypto,
+ *       unix seconds to ISO, and JSON body parsing. Internal, not exported.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026
