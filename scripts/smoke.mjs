@@ -1,6 +1,6 @@
 /**
  * @file scripts/smoke.mjs
- * @desc Imports the built package through its own exports map, the way Node consumers will\n *       (every subpath), and checks one result per subpath. Run by `bun run test:dist`.
+ * @desc Imports the built package through its own exports map, the way Node consumers will *       (every subpath), and checks one result per subpath. Run by `bun run test:dist`.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026
