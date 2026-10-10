@@ -1,6 +1,7 @@
 /**
  * @file src/buymeacoffee/index.ts
- * @desc @haruhimemoe/crowdfund/buymeacoffee: Buy Me a Coffee webhook signature check and donation\n *       and refund mapping. Web Crypto only.
+ * @desc @haruhimemoe/crowdfund/buymeacoffee: Buy Me a Coffee webhook signature check and donation
+ *       and refund mapping. Web Crypto only.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026

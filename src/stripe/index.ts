@@ -1,6 +1,7 @@
 /**
  * @file src/stripe/index.ts
- * @desc @haruhimemoe/crowdfund/stripe: Stripe webhook signature check and event to donation or\n *       refund mapping. No Stripe SDK: Web Crypto only.
+ * @desc @haruhimemoe/crowdfund/stripe: Stripe webhook signature check and event to donation or
+ *       refund mapping. No Stripe SDK: Web Crypto only.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026

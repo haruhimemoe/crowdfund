@@ -1,6 +1,7 @@
 /**
  * @file src/paypal/index.ts
- * @desc @haruhimemoe/crowdfund/paypal: PayPal webhook events to donations and refunds, and the\n *       body for PayPal's verify-webhook-signature call. No PayPal SDK, no HTTP.
+ * @desc @haruhimemoe/crowdfund/paypal: PayPal webhook events to donations and refunds, and the
+ *       body for PayPal's verify-webhook-signature call. No PayPal SDK, no HTTP.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026

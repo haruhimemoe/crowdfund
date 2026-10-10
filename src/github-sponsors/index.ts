@@ -1,6 +1,7 @@
 /**
  * @file src/github-sponsors/index.ts
- * @desc @haruhimemoe/crowdfund/github-sponsors: GitHub Sponsors webhook signature check and\n *       sponsorship to donation mapping. Web Crypto only.
+ * @desc @haruhimemoe/crowdfund/github-sponsors: GitHub Sponsors webhook signature check and
+ *       sponsorship to donation mapping. Web Crypto only.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026

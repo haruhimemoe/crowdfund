@@ -1,6 +1,7 @@
 /**
  * @file tests/api.test.ts
- * @desc The public surface per subpath (an added or removed export is a visible semver\n *       question), the exports map, and that src/ stays browser-safe and small.
+ * @desc The public surface per subpath (an added or removed export is a visible semver
+ *       question), the exports map, and that src/ stays browser-safe and small.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026

@@ -1,6 +1,7 @@
 /**
  * @file tests/fixtures/providers.ts
- * @desc Webhook payloads shaped like the providers' documented events, and a signer for tests.\n *       Every secret is fake.
+ * @desc Webhook payloads shaped like the providers' documented events, and a signer for tests.
+ *       Every secret is fake.
  * @author David @dvhsh (https://dvh.sh)
  * @created Tue Oct 6, 2026
  * @modified Tue Oct 6, 2026
